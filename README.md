@@ -6,13 +6,84 @@ A collection of command-line tools to speed up your GitHub workflow. Run command
 
 ### Prerequisites
 
+#### macOS
+
 - **Go 1.21+** - Install via `brew install go`
 - **gh CLI** (optional but recommended) - Install via `brew install gh && gh auth login`
 
+#### Linux
+
+- **Go 1.21+** - Install via your package manager:
+
+  ```bash
+  # Ubuntu/Debian
+  sudo apt install golang-go
+
+  # Fedora
+  sudo dnf install golang
+
+  # Arch
+  sudo pacman -S go
+  ```
+
+- **gh CLI** (optional but recommended):
+
+  ```bash
+  # Ubuntu/Debian
+  sudo apt install gh && gh auth login
+
+  # Fedora
+  sudo dnf install gh && gh auth login
+  ```
+
+#### Windows
+
+- **Go 1.21+** - Download from [go.dev/dl](https://go.dev/dl/) or install via:
+
+  ```powershell
+  # Using winget
+  winget install GoLang.Go
+
+  # Using Chocolatey
+  choco install golang
+
+  # Using Scoop
+  scoop install go
+  ```
+
+- **gh CLI** (optional but recommended):
+
+  ```powershell
+  # Using winget
+  winget install GitHub.cli
+
+  # Using Chocolatey
+  choco install gh
+
+  # Using Scoop
+  scoop install gh
+  ```
+
+  Then run `gh auth login` to authenticate.
+
+- **Make** (required for build):
+
+  ```powershell
+  # Using Chocolatey
+  choco install make
+
+  # Using Scoop
+  scoop install make
+  ```
+
+  Alternatively, you can use Git Bash or WSL which include make.
+
 ### Quick Install
 
+#### macOS / Linux
+
 ```bash
-git clone https://github.com/pedrocamponez/cli-tools
+git clone git@github.com:pcamponez/cli-tools.git
 cd cli-tools
 make install
 ```
@@ -24,17 +95,46 @@ This installs all commands to `~/go/bin/`. Make sure it's in your PATH:
 export PATH="$HOME/go/bin:$PATH"
 ```
 
+#### Windows
+
+```powershell
+git clone git@github.com:pcamponez/cli-tools.git
+cd cli-tools
+make install
+```
+
+This installs all commands to `%USERPROFILE%\go\bin\`. Add it to your PATH:
+
+**Option 1: PowerShell (current session)**
+
+```powershell
+$env:PATH += ";$env:USERPROFILE\go\bin"
+```
+
+**Option 2: Permanent (run as Administrator)**
+
+```powershell
+[Environment]::SetEnvironmentVariable("PATH", $env:PATH + ";$env:USERPROFILE\go\bin", "User")
+```
+
+**Option 3: Using System Settings**
+
+1. Press `Win + R`, type `sysdm.cpl`, press Enter
+2. Go to **Advanced** → **Environment Variables**
+3. Under "User variables", edit **Path**
+4. Add `%USERPROFILE%\go\bin`
+
 ## Commands
 
 ### Repository Navigation
 
-| Command | Description |
-|---------|-------------|
-| `open-repo` | Open the current repository in your browser |
-| `open-issues` | Open the issues page |
-| `open-actions` | Open the GitHub Actions page |
-| `open-file <file[:line]>` | Open a file in GitHub (optionally at a specific line) |
-| `open-blame <file[:line]>` | Open the blame view for a file |
+| Command                    | Description                                           |
+| -------------------------- | ----------------------------------------------------- |
+| `open-repo`                | Open the current repository in your browser           |
+| `open-issues`              | Open the issues page                                  |
+| `open-actions`             | Open the GitHub Actions page                          |
+| `open-file <file[:line]>`  | Open a file in GitHub (optionally at a specific line) |
+| `open-blame <file[:line]>` | Open the blame view for a file                        |
 
 **Examples:**
 
@@ -47,15 +147,15 @@ open-blame config.yaml:15    # Who changed line 15?
 
 ### Pull Request Workflow
 
-| Command | Description |
-|---------|-------------|
-| `create-pr` | Open the PR creation page for your current branch |
-| `open-pr` | Open the PR for your current branch |
-| `pr-status` | Show the status of your current branch's PR |
-| `pr-diff [number]` | Open the PR diff view in browser |
-| `pr-checkout <number>` | Checkout a PR locally |
-| `my-prs` | List all your open PRs |
-| `review-prs` | List PRs awaiting your review |
+| Command                | Description                                       |
+| ---------------------- | ------------------------------------------------- |
+| `create-pr`            | Open the PR creation page for your current branch |
+| `open-pr`              | Open the PR for your current branch               |
+| `pr-status`            | Show the status of your current branch's PR       |
+| `pr-diff [number]`     | Open the PR diff view in browser                  |
+| `pr-checkout <number>` | Checkout a PR locally                             |
+| `my-prs`               | List all your open PRs                            |
+| `review-prs`           | List PRs awaiting your review                     |
 
 **Examples:**
 
@@ -72,11 +172,11 @@ review-prs                   # What PRs need my review?
 
 ### Issues
 
-| Command | Description |
-|---------|-------------|
-| `new-issue` | Open the new issue page |
-| `issue <number>` | Open a specific issue |
-| `my-issues` | List issues assigned to you |
+| Command          | Description                 |
+| ---------------- | --------------------------- |
+| `new-issue`      | Open the new issue page     |
+| `issue <number>` | Open a specific issue       |
+| `my-issues`      | List issues assigned to you |
 
 **Examples:**
 
@@ -94,8 +194,24 @@ Some commands require GitHub authentication (anything that queries the API).
 
 The easiest way - `gh` handles authentication automatically:
 
+**macOS:**
+
 ```bash
 brew install gh
+gh auth login
+```
+
+**Linux:**
+
+```bash
+# Install gh via your package manager (see Prerequisites)
+gh auth login
+```
+
+**Windows:**
+
+```powershell
+# Install gh via winget/choco/scoop (see Prerequisites)
 gh auth login
 ```
 
@@ -103,11 +219,25 @@ gh auth login
 
 Set a token as an environment variable:
 
+**macOS / Linux:**
+
 ```bash
 export GITHUB_TOKEN="ghp_xxxxxxxxxxxx"
 ```
 
-Add this to your `~/.zshrc` to make it permanent.
+Add this to your `~/.zshrc` (macOS) or `~/.bashrc` (Linux) to make it permanent.
+
+**Windows (PowerShell):**
+
+```powershell
+$env:GITHUB_TOKEN = "ghp_xxxxxxxxxxxx"
+```
+
+To make it permanent on Windows:
+
+```powershell
+[Environment]::SetEnvironmentVariable("GITHUB_TOKEN", "ghp_xxxxxxxxxxxx", "User")
+```
 
 ### Multiple GitHub Accounts
 
@@ -115,7 +245,10 @@ If you use SSH host aliases for different GitHub accounts (e.g., work vs persona
 
 **Setup:**
 
-1. Configure SSH aliases in `~/.ssh/config`:
+1. Configure SSH aliases:
+
+   **macOS / Linux** (`~/.ssh/config`):
+
    ```
    # Personal account
    Host github.com
@@ -130,7 +263,26 @@ If you use SSH host aliases for different GitHub accounts (e.g., work vs persona
      IdentityFile ~/.ssh/id_work
    ```
 
+   **Windows** (`%USERPROFILE%\.ssh\config`):
+
+   ```
+   # Personal account
+   Host github.com
+     HostName github.com
+     User git
+     IdentityFile C:\Users\YourName\.ssh\id_personal
+
+   # Work account
+   Host github-work
+     HostName github.com
+     User git
+     IdentityFile C:\Users\YourName\.ssh\id_work
+   ```
+
 2. Set tokens for each alias:
+
+   **macOS / Linux:**
+
    ```bash
    # Default token (for github.com)
    export GITHUB_TOKEN="ghp_personal_token"
@@ -139,14 +291,27 @@ If you use SSH host aliases for different GitHub accounts (e.g., work vs persona
    export GITHUB_TOKEN_WORK="ghp_work_token"
    ```
 
+   **Windows (PowerShell - permanent):**
+
+   ```powershell
+   # Default token (for github.com)
+   [Environment]::SetEnvironmentVariable("GITHUB_TOKEN", "ghp_personal_token", "User")
+
+   # Work token (for github-work alias)
+   [Environment]::SetEnvironmentVariable("GITHUB_TOKEN_WORK", "ghp_work_token", "User")
+   ```
+
 The tools will automatically use `GITHUB_TOKEN_WORK` when you're in a repo cloned via `git@github-work:org/repo.git`.
 
 **Token naming convention:**
+
 - `git@github-rhei:...` → `GITHUB_TOKEN_RHEI`
 - `git@github-work:...` → `GITHUB_TOKEN_WORK`
 - `git@github.mycompany:...` → `GITHUB_TOKEN_MYCOMPANY`
 
 ## Building from Source
+
+### macOS / Linux
 
 ```bash
 # Build all commands to ./bin/
@@ -163,6 +328,37 @@ make clean
 
 # Uninstall
 make uninstall
+```
+
+### Windows
+
+The same commands work on Windows if you have `make` installed (see Prerequisites).
+
+```powershell
+# Build all commands to .\bin\
+make build
+
+# Build a specific command
+make open-repo
+
+# Install to %USERPROFILE%\go\bin\
+make install
+
+# Clean up
+make clean
+
+# Uninstall
+make uninstall
+```
+
+**Alternative without Make (using Go directly):**
+
+```powershell
+# Build a specific command
+go build -o bin\open-repo.exe .\cmd\open-repo
+
+# Install all commands
+go install .\cmd\...
 ```
 
 ## Contributing
