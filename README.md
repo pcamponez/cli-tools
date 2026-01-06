@@ -38,7 +38,7 @@ A collection of command-line tools to speed up your GitHub workflow. Run command
 
 #### Windows
 
-- **Go 1.21+** - Download from [go.dev/dl](https://go.dev/dl/) or install via:
+- **Go 1.21+** - Download from [go.dev/dl](https://go.dev/dl/) or via:
 
   ```powershell
   # Using winget
